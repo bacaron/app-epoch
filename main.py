@@ -4,17 +4,22 @@ import mne
 import json
 import os
 
-sample_data_folder = mne.datasets.sample.data_path()
-sample_data_raw_file = os.path.join(sample_data_folder, 'MEG', 'sample',
-                                    'sample_audvis_raw.fif')
-#crop() the Raw data to save memory:
-raw = mne.io.read_raw_fif(sample_data_raw_file, verbose=False).crop(tmax=60)
 
-#extract an events array from Raw objects using mne.find_events():
-events = mne.find_events(raw, stim_channel='STI 014')
 
-epochs = mne.Epochs(raw, events, tmin=-0.3, tmax=0.7)
-print(epochs)
+def epoch(raw,tmin,tmax):
+
+    # extract an events array from Raw objects using mne.find_events():
+    events = mne.find_events(raw, stim_channel='STI 014')
+    epochs = mne.Epochs(raw, events, tmin=-tmin, tmax=tmax)
+
+    epochs.save('out_dir/epochs-epo.fif', overwrite=True)
+
+
+
+    return epochs
+
+
+
 
 def main():
 
@@ -25,7 +30,20 @@ def main():
 
     # Read the meg file
     data_file = config.pop('fif')
-    raw = mne.io.read_raw_fif(data_file, allow_maxshield=True)
+
+    # Read the event time
+    tmin = config.pop('t_min')
+    tmax = config.pop('t_max')
+
+    # crop() the Raw data to save memory:
+    raw = mne.io.read_raw_fif(data_file, verbose=False).crop(tmax=60)
+    # extract an events array from Raw objects using mne.find_events():
+    # events = mne.find_events(raw, stim_channel='STI 014')
+    #
+    epochs = epoch(raw,tmin,tmax)
+
+
+
 
 
 
