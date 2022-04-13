@@ -1,23 +1,12 @@
-#!/usr/local/bin/python3
-
-import mne
-import json
 import os
+import numpy as np
+import mne
 
+sample_data_folder = mne.datasets.sample.data_path()
+sample_data_raw_file = os.path.join(sample_data_folder, 'MEG', 'sample',
+                                    'sample_audvis_raw.fif')
+raw = mne.io.read_raw_fif(sample_data_raw_file)
+raw.crop(tmax=60).load_data()
 
-def main():
-
-
-    # Load inputs from config.json
-    with open('config.json') as config_json:
-        config = json.load(config_json)
-
-    # Read the meg file
-    data_file = config.pop('fif')
-    raw = mne.io.read_raw_fif(data_file, allow_maxshield=True)
-
-
-
-
-if __name__ == '__main__':
-    main()
+events = mne.find_events(raw, stim_channel='STI 014')
+print(events[:5])  # show the first 5

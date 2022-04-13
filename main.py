@@ -9,10 +9,16 @@ import os
 def epoch(raw,tmin,tmax):
 
     # extract an events array from Raw objects using mne.find_events():
+    # reading experimental events from a “STIM” channel;
     events = mne.find_events(raw, stim_channel='STI 014')
-    epochs = mne.Epochs(raw, events, tmin=-tmin, tmax=tmax)
+
+
+    epochs = mne.Epochs(raw, events, tmin=tmin, tmax=tmax)
+
+    epochs.plot(n_epochs=10)
 
     epochs.save('out_dir/epochs-epo.fif', overwrite=True)
+
 
 
 
@@ -37,10 +43,11 @@ def main():
 
     # crop() the Raw data to save memory:
     raw = mne.io.read_raw_fif(data_file, verbose=False).crop(tmax=60)
-    # extract an events array from Raw objects using mne.find_events():
-    # events = mne.find_events(raw, stim_channel='STI 014')
-    #
-    epochs = epoch(raw,tmin,tmax)
+
+    ## Build epochs parameters
+    epochs_params = dict(tmin=tmin, tmax=tmax)
+
+    epochs = epoch(raw,**epochs_params)
 
 
 
