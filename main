@@ -3,4 +3,9 @@
 #PBS -l nodes=1:ppn=8
 #PBS -l walltime=00:10:00
 
+# Make output directories
+mkdir -p out_dir
+
 singularity exec docker://brainlife/mne:0.23dev python3 main.py
+
+
