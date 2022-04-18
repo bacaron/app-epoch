@@ -10,20 +10,16 @@ def epoch(raw,tmin,tmax):
 
     # extract an events array from Raw objects using mne.find_events():
     # reading experimental events from a “STIM” channel;
-    #events = mne.find_events(raw, stim_channel='STI 014')
+    events = mne.find_events(raw, stim_channel='STI 014')
 
 
-    #epochs = mne.Epochs(raw, events, tmin=tmin, tmax=tmax)
+    epochs = mne.Epochs(raw, events, tmin=tmin, tmax=tmax)
 
-    #epochs.plot(n_epochs=10)
+    epochs.plot(n_epochs=10)
 
-    #epochs.save('out_dir/epochs-epo.fif', overwrite=True)
+    epochs.save('out_dir/epochs-epo.fif', overwrite=True)
     
-    raw.save('out_dir/raw.fif', overwrite=True)
-
-
-
-
+ 
     return epochs
 
 
