@@ -24,7 +24,8 @@ def epoch(raw,tmin,tmax):
 
 
 
-    return epochs
+    #return epochs
+    return raw
 
 
 
