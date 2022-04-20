@@ -3,8 +3,11 @@
 import mne
 import json
 import os
+import matplotlib.pyplot as plt
 
-
+# Current path
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 def epoch(raw,tmin,tmax):
 
@@ -17,7 +20,15 @@ def epoch(raw,tmin,tmax):
 
     epochs.plot(n_epochs=10)
 
-    epochs.save('out_dir/epochs-epo.fif', overwrite=True)
+    # == SAVE FILE ==
+    epochs.save(os.path.join('out_dir', 'meg-epo.fif'))
+
+    #epochs.save('out_dir/epochs-epo.fif', overwrite=True)
+
+    # == FIGURES ==
+    plt.figure()
+    epochs.plot()
+    plt.savefig(os.path.join('out_figs', 'epochs_plot.png'))
     
  
     return epochs
