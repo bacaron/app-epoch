@@ -9,11 +9,8 @@ import matplotlib.pyplot as plt
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-def epoch(raw,tmin,tmax):
+def epoch(raw,events,tmin,tmax):
 
-    # extract an events array from Raw objects using mne.find_events():
-    # reading experimental events from a “STIM” channel;
-    events = mne.find_events(raw, stim_channel='STI 014')
 
 
     epochs = mne.Epochs(raw, events, tmin=tmin, tmax=tmax)
@@ -49,12 +46,21 @@ def main():
     # Read the event time
     tmin = config.pop('t_min')
     tmax = config.pop('t_max')
-
+    
+    if 'events' in config.keys():
+        events_file = config.pop('events')
+        events = mne.read_events(events_file)
+    else:
+        # extract an events array from Raw objects using mne.find_events():
+        # reading experimental events from a “STIM” channel;
+        events = mne.find_events(raw, stim_channel='STI 014')
+         
+        
     # crop() the Raw data to save memory:
     raw = mne.io.read_raw_fif(data_file, verbose=False).crop(tmax=60)
 
     ## Build epochs parameters
-    epochs_params = dict(tmin=tmin, tmax=tmax)
+    epochs_params = dict(events, tmin=tmin, tmax=tmax)
 
     epochs = epoch(raw,**epochs_params)
 
