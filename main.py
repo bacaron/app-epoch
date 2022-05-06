@@ -24,10 +24,10 @@ def main():
     report = mne.Report(title='Raw example')
     # This method also accepts a path, e.g., raw=raw_path
     report.add_raw(raw=raw, title='Raw', psd=False)  # omit PSD plot
-    report.save('report_raw.html', overwrite=True)
+    #report.save('report_raw.html', overwrite=True)
 
     # # Save report
-    # report.save('out_dir_report/report.html', overwrite=True)
+    report.save('out_dir_report/report.html', overwrite=True)
 
 
 
