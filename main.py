@@ -28,6 +28,9 @@ def main():
 
     # # Save report
     report.save('out_dir_report/report.html', overwrite=True)
+    
+     # # Save raw
+    raw.save('out_dir/raw.fif', overwrite=True)
 
 
 
