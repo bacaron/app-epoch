@@ -9,6 +9,13 @@ import tempfile
 import numpy as np
 import scipy.ndimage
 import matplotlib.pyplot as plt
+
+#workaround for -- _tkinter.TclError: invalid command name ".!canvas"
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+
 import mne
 
 
