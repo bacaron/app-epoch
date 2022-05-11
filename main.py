@@ -85,14 +85,15 @@ def main():
 
     # crop() the Raw data to save memory:
     raw = mne.io.read_raw_fif(data_file, verbose=False).crop(tmax=60)
+    
+    if 'events' in config.keys():
+        events_file = config.pop('events')
+        if op.exists(events_file):
+            events = mne.read_events(events_file)
+    else:
+        events = mne.find_events(raw, stim_channel='STI 014')
 
-    #if 'events' in config.keys():
-       #  events_file = config.pop('events')
-        # events = mne.read_events(events_file)
-    # else:
-        # extract an events array from Raw objects using mne.find_events():
-        # reading experimental events from a “STIM” channel;
-    events = mne.find_events(raw, stim_channel='STI 014')
+    
 
     print(config['param_eeg'])
     epochs = epoch(config['param_meg'],config['param_eeg'],config['param_eog'], config['param_ecg'],config['param_emg'],config['param_stim'], raw, events, tmin=tmin, tmax=tmax)
