@@ -86,7 +86,7 @@ def main():
     # crop() the Raw data to save memory:
     raw = mne.io.read_raw_fif(data_file, verbose=False).crop(tmax=60)
 
-    i# f 'events' in config.keys():
+    #if 'events' in config.keys():
        #  events_file = config.pop('events')
         # events = mne.read_events(events_file)
     # else:
