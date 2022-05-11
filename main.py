@@ -3,6 +3,7 @@
 import mne
 import json
 import os
+import os.path as op
 import matplotlib.pyplot as plt
 from pathlib import Path
 import tempfile
