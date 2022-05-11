@@ -91,6 +91,8 @@ def main():
         events_file = config.pop('events')
         if op.exists(events_file):
             events = mne.read_events(events_file)
+        else:
+            events = mne.find_events(raw, stim_channel='STI 014')
     else:
         events = mne.find_events(raw, stim_channel='STI 014')
 
