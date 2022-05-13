@@ -83,6 +83,7 @@ def main():
     
     event_id_condition= config['event_id_condition']
     
+    #Convert String to Dictionary using strip() and split() methods
     event_id = dict((x.strip(), int(y.strip()))
                      for x, y in (element.split('-')
                                   for element in  event_id_condition.split(', ')))     
