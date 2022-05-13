@@ -25,7 +25,7 @@ __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 
-def epoch(param_meg,param_eeg,param_eog,param_ecg,param_emg,param_stim,raw, events, tmin, tmax):
+def epoch(param_meg,param_eeg,param_eog,param_ecg,param_emg,param_stim, event_id_condition, raw, events, tmin, tmax):
     raw.pick_types(meg=param_meg,eeg=param_eeg,eog=param_eog,ecg=param_ecg,emg=param_emg, stim=param_stim).crop(tmax=60).load_data()
 
 
@@ -40,12 +40,10 @@ def epoch(param_meg,param_eeg,param_eog,param_ecg,param_emg,param_stim,raw, even
     report.add_events(events=events, title='Events', sfreq=sfreq)
 
 
-    #epochs
-
-    event_id = {
-        'auditory/left': 1, 'auditory/right': 2, 'visual/left': 3,
-        'visual/right': 4, 'face': 5, 'buttonpress': 32
-    }
+  
+    event_id = dict((x.strip(), int(y.strip()))
+                     for x, y in (element.split('-')
+                                  for element in  event_id_condition.split(', ')))
 
     metadata, _, _ = mne.epochs.make_metadata(
         events=events,
@@ -99,7 +97,7 @@ def main():
     
 
     print(config['param_eeg'])
-    epochs = epoch(config['param_meg'],config['param_eeg'],config['param_eog'], config['param_ecg'],config['param_emg'],config['param_stim'], raw, events, tmin=tmin, tmax=tmax)
+    epochs = epoch(config['param_meg'],config['param_eeg'],config['param_eog'], config['param_ecg'],config['param_emg'],config['param_stim'], config['event_id_condition'], raw, events, tmin=tmin, tmax=tmax)
 
 
 
