@@ -25,25 +25,17 @@ __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 
-def epoch(param_meg,param_eeg,param_eog,param_ecg,param_emg,param_stim, event_id_condition, raw, events, tmin, tmax):
+def epoch(param_meg,param_eeg,param_eog,param_ecg,param_emg,param_stim, event_id, raw, events, tmin, tmax):
     raw.pick_types(meg=param_meg,eeg=param_eeg,eog=param_eog,ecg=param_ecg,emg=param_emg, stim=param_stim).crop(tmax=60).load_data()
-
 
     report = mne.Report(title='Report')
 
     #raw
     report.add_raw(raw=raw, title='Raw', psd=False)  # omit PSD plot
 
-
     #events
     sfreq = raw.info['sfreq']
     report.add_events(events=events, title='Events', sfreq=sfreq)
-
-
-  
-    event_id = dict((x.strip(), int(y.strip()))
-                     for x, y in (element.split('-')
-                                  for element in  event_id_condition.split(', ')))
 
     metadata, _, _ = mne.epochs.make_metadata(
         events=events,
@@ -63,12 +55,6 @@ def epoch(param_meg,param_eeg,param_eog,param_ecg,param_emg,param_stim, event_id
 
     # == SAVE FILE ==
     epochs.save(os.path.join('out_dir', 'meg-epo.fif'), overwrite=True)
-
-
-
-
-
-
 
 def main():
     # Load inputs from config.json
@@ -93,11 +79,20 @@ def main():
             events = mne.find_events(raw, stim_channel='STI 014')
     else:
         events = mne.find_events(raw, stim_channel='STI 014')
-
+        
     
+    event_id_condition= config['event_id_condition']
+    
+    event_id = dict((x.strip(), int(y.strip()))
+                     for x, y in (element.split('-')
+                                  for element in  event_id_condition.split(', ')))     
+
+    id_list = list(event_id.values())
+
+    events = mne.pick_events(events, include=id_list)
 
     print(config['param_eeg'])
-    epochs = epoch(config['param_meg'],config['param_eeg'],config['param_eog'], config['param_ecg'],config['param_emg'],config['param_stim'], config['event_id_condition'], raw, events, tmin=tmin, tmax=tmax)
+    epochs = epoch(config['param_meg'],config['param_eeg'],config['param_eog'], config['param_ecg'],config['param_emg'],config['param_stim'], event_id, raw, events, tmin=tmin, tmax=tmax)
 
 
 
