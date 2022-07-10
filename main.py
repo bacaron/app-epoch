@@ -71,16 +71,19 @@ def main():
     # crop() the Raw data to save memory:
     raw = mne.io.read_raw_fif(data_file, verbose=False).crop(tmax=60)
     
-    if 'events' in config.keys():
-        events_file = config.pop('events')
-        if op.exists(events_file):
-            events = mne.read_events(events_file)
-        else:
-            events = mne.find_events(raw, stim_channel='STI 014')
-    else:
-        events = mne.find_events(raw, stim_channel='STI 014')
-        
-    
+    # if 'events' in config.keys():
+    #     events_file = config.pop('events')
+    #     if op.exists(events_file):
+    #         events = mne.read_events(events_file)
+    #     else:
+    #         events = mne.find_events(raw, stim_channel=config['stim_channel'])
+    # else:
+    #     events = mne.find_events(raw, stim_channel=config['stim_channel'])
+    mask = 4096 + 256  # mask for excluding high order bits
+
+    events = mne.find_events(raw, stim_channel=config['stim_channel'],
+                             consecutive='increasing', mask=mask,
+                             mask_type='not_and', min_duration=0.003)
     event_id_condition= config['event_id_condition']
     
     #Convert String to Dictionary using strip() and split() methods
@@ -94,9 +97,4 @@ def main():
 
     print(config['param_eeg'])
     epochs = epoch(config['param_meg'],config['param_eeg'],config['param_eog'], config['param_ecg'],config['param_emg'],config['param_stim'], event_id, raw, events, tmin=tmin, tmax=tmax)
-
-
-
-if __name__ == '__main__':
-    main()
 
