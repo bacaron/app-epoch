@@ -69,7 +69,7 @@ def main():
     tmax = config.pop('t_max')
 
     # crop() the Raw data to save memory:
-    raw = mne.io.read_raw_fif(data_file, verbose=False).crop(tmax=60)
+    raw = mne.io.read_raw_fif(data_file, verbose=False)
     
     # if 'events' in config.keys():
     #     events_file = config.pop('events')
