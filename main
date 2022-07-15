@@ -8,4 +8,7 @@ mkdir -p out_dir
 mkdir -p out_figs
 mkdir -p out_dir_report
 
+set -x
+set -e
+
 singularity exec docker://brainlife/mne:1.0.2 python3 main.py
